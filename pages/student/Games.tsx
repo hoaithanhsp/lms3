@@ -16,36 +16,36 @@ const MOCK_GAMES: Game[] = [
     id: '1',
     title: 'Giải cứu công chúa - Ôn tập phép cộng',
     thumbnail: 'https://picsum.photos/seed/game1/400/300',
-    source: 'Trò chơi của Cô Ngọc',
+    source: 'PhET Interactive Simulations',
     category: 'Chủ đề 1: Ôn tập',
-    embedUrl: 'https://wordwall.net/embed/play/123/456/789', // Example URL
+    embedUrl: 'https://phet.colorado.edu/sims/html/arithmetic/latest/arithmetic_all.html?locale=vi',
     color: 'bg-blue-500'
   },
   {
     id: '2',
     title: 'Đua xe - Bảng cửu chương 5',
     thumbnail: 'https://picsum.photos/seed/game2/400/300',
-    source: 'Quizizz',
+    source: 'PhET Interactive Simulations',
     category: 'Chủ đề 2: Phép nhân, phép chia',
-    embedUrl: 'https://quizizz.com/join/game/123456', // Example URL
+    embedUrl: 'https://phet.colorado.edu/sims/html/number-play/latest/number-play_all.html?locale=vi',
     color: 'bg-purple-500'
   },
   {
     id: '3',
     title: 'Săn kho báu - Hình học',
     thumbnail: 'https://picsum.photos/seed/game3/400/300',
-    source: 'Wordwall',
+    source: 'PhET Interactive Simulations',
     category: 'Chủ đề 1: Ôn tập',
-    embedUrl: 'https://wordwall.net/embed/play/987/654/321', // Example URL
+    embedUrl: 'https://phet.colorado.edu/sims/html/area-builder/latest/area-builder_all.html?locale=vi',
     color: 'bg-orange-500'
   },
   {
     id: '4',
     title: 'Ong tìm mật - Phép chia hết',
     thumbnail: 'https://picsum.photos/seed/game4/400/300',
-    source: 'Trò chơi của Cô Ngọc',
+    source: 'PhET Interactive Simulations',
     category: 'Chủ đề 2: Phép nhân, phép chia',
-    embedUrl: 'https://wordwall.net/embed/play/111/222/333', // Example URL
+    embedUrl: 'https://phet.colorado.edu/sims/html/fraction-matcher/latest/fraction-matcher_all.html?locale=vi',
     color: 'bg-green-500'
   }
 ];
@@ -56,8 +56,8 @@ const StudentGames: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('Tất cả');
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
-  const filteredGames = activeFilter === 'Tất cả' 
-    ? MOCK_GAMES 
+  const filteredGames = activeFilter === 'Tất cả'
+    ? MOCK_GAMES
     : MOCK_GAMES.filter(game => game.category === activeFilter);
 
   return (
@@ -77,7 +77,7 @@ const StudentGames: React.FC = () => {
               Tham gia các trò chơi thú vị để ôn tập kiến thức và nhận quà hấp dẫn.
             </p>
           </div>
-          
+
           {/* Placeholder for Mascot */}
           <div className="hidden md:block relative w-32 h-32 lg:w-48 lg:h-48">
             {/* Using a trophy icon as a placeholder for the mascot */}
@@ -86,7 +86,7 @@ const StudentGames: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Decorative circles */}
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white/10 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-white/10 blur-3xl"></div>
@@ -98,11 +98,10 @@ const StudentGames: React.FC = () => {
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-              activeFilter === filter
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${activeFilter === filter
                 ? 'bg-blue-600 text-white shadow-md transform scale-105'
                 : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
-            }`}
+              }`}
           >
             {filter}
           </button>
@@ -112,14 +111,14 @@ const StudentGames: React.FC = () => {
       {/* Game Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredGames.map((game) => (
-          <div 
+          <div
             key={game.id}
             className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col"
           >
             {/* Thumbnail */}
             <div className="relative aspect-video overflow-hidden bg-gray-100">
-              <img 
-                src={game.thumbnail} 
+              <img
+                src={game.thumbnail}
                 alt={game.title}
                 className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                 referrerPolicy="no-referrer"
@@ -129,10 +128,10 @@ const StudentGames: React.FC = () => {
                   {game.source}
                 </span>
               </div>
-              
+
               {/* Overlay on hover */}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <button 
+                <button
                   onClick={() => setSelectedGame(game)}
                   className="bg-white text-blue-600 rounded-full p-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-lg"
                 >
@@ -147,7 +146,7 @@ const StudentGames: React.FC = () => {
               <h3 className="font-bold text-gray-800 mb-3 line-clamp-2 flex-1">
                 {game.title}
               </h3>
-              
+
               <button
                 onClick={() => setSelectedGame(game)}
                 className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
@@ -164,7 +163,7 @@ const StudentGames: React.FC = () => {
       {selectedGame && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
             onClick={() => setSelectedGame(null)}
           ></div>
@@ -182,7 +181,7 @@ const StudentGames: React.FC = () => {
                   <p className="text-xs text-gray-500">{selectedGame.source}</p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => setSelectedGame(null)}
                 className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-500 hover:text-gray-700"
               >
