@@ -1,6 +1,6 @@
 
 import { DataProvider } from './dataProvider';
-import { 
+import {
   User, UserRole, Class, Subject, Topic, Lesson, LessonStatus,
   Resource, ResourceType, Submission, AssessmentLevel, SubmissionStatus,
   Announcement, AnnouncementTarget, StudentProgress, ClassReportStats, AtRiskStudent, Assignment, AssignmentType
@@ -45,14 +45,14 @@ const seedData: DB = {
     { id: 'r1', lessonId: 'l1', type: ResourceType.VIDEO, title: 'Video: Nhắc lại kiến thức', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', isRequired: true, order: 1 },
     { id: 'r2', lessonId: 'l1', type: ResourceType.GAME, title: 'Game: Ong tìm mật', url: '/game/ong-tim-mat', isRequired: false, order: 2 },
     { id: 'r3', lessonId: 'l1', type: ResourceType.WORKSHEET, title: 'Phiếu bài tập số 1', url: '', isRequired: true, order: 3 },
-    
+
     { id: 'r4', lessonId: 'l2', type: ResourceType.VIDEO, title: 'Video: Ôn tập cộng trừ', url: '', isRequired: true, order: 1 },
     { id: 'r5', lessonId: 'l2', type: ResourceType.WORKSHEET, title: 'Bài tập về nhà', url: '', isRequired: true, order: 2 }
   ],
   submissions: [
-    { 
-      id: 'sub1', assignmentId: 'r3', studentId: 'u2', submittedAt: '2023-10-19T10:00:00Z', 
-      content: 'Em nộp bài ạ.', 
+    {
+      id: 'sub1', assignmentId: 'r3', studentId: 'u2', submittedAt: '2023-10-19T10:00:00Z',
+      content: 'Em nộp bài ạ.',
       isGraded: true,
       assessmentLevel: AssessmentLevel.T,
       assessment: AssessmentLevel.T,
@@ -133,36 +133,36 @@ class MockProvider implements DataProvider {
   }
   async getClasses(tid?: string) { return tid ? this.db.classes.filter(c => c.teacherId === tid) : this.db.classes; }
   async createClass(d: any) { const c = { ...d, id: this.genId() }; this.db.classes.push(c); this.save(); return c; }
-  async updateClass(id: string, d: any) { const idx = this.db.classes.findIndex(c => c.id === id); if(idx>-1) {this.db.classes[idx] = {...this.db.classes[idx], ...d}; this.save(); return this.db.classes[idx];} throw new Error("Not found"); }
+  async updateClass(id: string, d: any) { const idx = this.db.classes.findIndex(c => c.id === id); if (idx > -1) { this.db.classes[idx] = { ...this.db.classes[idx], ...d }; this.save(); return this.db.classes[idx]; } throw new Error("Not found"); }
   async deleteClass(id: string) { this.db.classes = this.db.classes.filter(c => c.id !== id); this.save(); }
-  
+
   async getAllStudents() { return this.db.users.filter(u => u.role === UserRole.STUDENT); }
   async getStudentsByClass(cid: string) { return this.db.users.filter(u => u.classId === cid && u.role === UserRole.STUDENT); }
   async createStudent(d: any) { const s = { ...d, id: this.genId(), role: UserRole.STUDENT }; this.db.users.push(s); this.save(); return s; }
-  async updateStudent(id: string, d: any) { const idx = this.db.users.findIndex(u => u.id === id); if(idx>-1) {this.db.users[idx]={...this.db.users[idx], ...d}; this.save(); return this.db.users[idx];} throw new Error("Not found"); }
+  async updateStudent(id: string, d: any) { const idx = this.db.users.findIndex(u => u.id === id); if (idx > -1) { this.db.users[idx] = { ...this.db.users[idx], ...d }; this.save(); return this.db.users[idx]; } throw new Error("Not found"); }
   async deleteStudent(id: string) { this.db.users = this.db.users.filter(u => u.id !== id); this.save(); }
 
   async getSubjects() { return this.db.subjects; }
-  async createSubject(d: any) { const s = {...d, id: this.genId()}; this.db.subjects.push(s); this.save(); return s; }
+  async createSubject(d: any) { const s = { ...d, id: this.genId() }; this.db.subjects.push(s); this.save(); return s; }
   async updateSubject(id: string, d: any) { return this.db.subjects[0]; }
   async deleteSubject(id: string) { }
-  
-  async getTopics(sid: string) { return this.db.topics.filter(t => t.subjectId === sid).sort((a,b) => a.order - b.order); }
-  async createTopic(d: any) { const t = {...d, id: this.genId()}; this.db.topics.push(t); this.save(); return t; }
-  async updateTopic(id: string, d: any) { const idx = this.db.topics.findIndex(t => t.id === id); if(idx>-1){this.db.topics[idx]={...this.db.topics[idx], ...d}; this.save(); return this.db.topics[idx];} throw new Error("Not found"); }
+
+  async getTopics(sid: string) { return this.db.topics.filter(t => t.subjectId === sid).sort((a, b) => a.order - b.order); }
+  async createTopic(d: any) { const t = { ...d, id: this.genId() }; this.db.topics.push(t); this.save(); return t; }
+  async updateTopic(id: string, d: any) { const idx = this.db.topics.findIndex(t => t.id === id); if (idx > -1) { this.db.topics[idx] = { ...this.db.topics[idx], ...d }; this.save(); return this.db.topics[idx]; } throw new Error("Not found"); }
   async deleteTopic(id: string) { this.db.topics = this.db.topics.filter(t => t.id !== id); this.save(); }
 
-  async getLessons(tid: string) { return this.db.lessons.filter(l => l.topicId === tid).sort((a,b) => a.order - b.order); }
+  async getLessons(tid: string) { return this.db.lessons.filter(l => l.topicId === tid).sort((a, b) => a.order - b.order); }
   async getLessonById(lid: string) { return this.db.lessons.find(l => l.id === lid); }
-  async createLesson(d: any) { const l = {...d, id: this.genId()}; this.db.lessons.push(l); this.save(); return l; }
-  async updateLesson(id: string, d: any) { const idx = this.db.lessons.findIndex(l => l.id === id); if(idx>-1){this.db.lessons[idx]={...this.db.lessons[idx], ...d}; this.save(); return this.db.lessons[idx];} throw new Error("Not found"); }
+  async createLesson(d: any) { const l = { ...d, id: this.genId() }; this.db.lessons.push(l); this.save(); return l; }
+  async updateLesson(id: string, d: any) { const idx = this.db.lessons.findIndex(l => l.id === id); if (idx > -1) { this.db.lessons[idx] = { ...this.db.lessons[idx], ...d }; this.save(); return this.db.lessons[idx]; } throw new Error("Not found"); }
   async deleteLesson(id: string) { this.db.lessons = this.db.lessons.filter(l => l.id !== id); this.save(); }
 
   async getResourcesByLesson(lessonId: string) {
-    return this.db.resources.filter(r => r.lessonId === lessonId).sort((a,b) => a.order - b.order);
+    return this.db.resources.filter(r => r.lessonId === lessonId).sort((a, b) => a.order - b.order);
   }
-  
-  async getAllAssignments() { 
+
+  async getAllAssignments() {
     return this.db.resources
       .filter(r => r.type === ResourceType.WORKSHEET)
       .map(r => ({
@@ -174,16 +174,23 @@ class MockProvider implements DataProvider {
         type: AssignmentType.ESSAY
       } as Assignment));
   }
-  
+
   async getAssignmentById(id: string) {
     const r = this.db.resources.find(res => res.id === id);
     if (!r) return undefined;
-    return { ...r, description: 'Mô tả bài tập', dueDate: new Date().toISOString(), type: AssignmentType.ESSAY, points: 10 } as Assignment;
+    const anyR = r as any;
+    return {
+      ...r,
+      description: anyR.description || 'Chưa có mô tả',
+      dueDate: anyR.dueDate || new Date().toISOString(),
+      type: anyR.assignmentType || AssignmentType.ESSAY,
+      points: anyR.points || 10
+    } as Assignment;
   }
-  
+
   async getAssignmentsByLesson(lessonId: string) {
-     const res = await this.getResourcesByLesson(lessonId);
-     return res.filter(r => r.type === ResourceType.WORKSHEET).map(r => ({...r, type: AssignmentType.ESSAY, points: 10, dueDate: new Date().toISOString()} as Assignment));
+    const res = await this.getResourcesByLesson(lessonId);
+    return res.filter(r => r.type === ResourceType.WORKSHEET).map(r => ({ ...r, type: AssignmentType.ESSAY, points: 10, dueDate: new Date().toISOString() } as Assignment));
   }
 
   async createAssignment(d: any) {
@@ -194,40 +201,41 @@ class MockProvider implements DataProvider {
       title: d.title,
       url: '',
       isRequired: true,
-      order: 99
+      order: 99,
+      ...(d as any) // Giữ lại description, dueDate...
     };
     this.db.resources.push(r);
     this.save();
     return { ...r, ...d } as Assignment;
   }
-  
+
   async updateAssignment(id: string, d: any) {
-     const idx = this.db.resources.findIndex(r => r.id === id);
-     if(idx>-1) {
-       this.db.resources[idx] = { ...this.db.resources[idx], title: d.title || this.db.resources[idx].title };
-       this.save();
-       return { ...this.db.resources[idx], ...d } as Assignment;
-     }
-     throw new Error("Not found");
+    const idx = this.db.resources.findIndex(r => r.id === id);
+    if (idx > -1) {
+      this.db.resources[idx] = { ...this.db.resources[idx], title: d.title || this.db.resources[idx].title };
+      this.save();
+      return { ...this.db.resources[idx], ...d } as Assignment;
+    }
+    throw new Error("Not found");
   }
   async deleteAssignment(id: string) { this.db.resources = this.db.resources.filter(r => r.id !== id); this.save(); }
 
   async getMyAssignments(studentId: string) {
     const worksheets = this.db.resources.filter(r => r.type === ResourceType.WORKSHEET);
     return worksheets.map(w => {
-       const sub = this.db.submissions.find(s => s.assignmentId === w.id && s.studentId === studentId);
-       return { 
-         assignment: { ...w, dueDate: new Date().toISOString(), type: AssignmentType.ESSAY, points: 10 } as Assignment, 
-         submission: sub 
-       };
+      const sub = this.db.submissions.find(s => s.assignmentId === w.id && s.studentId === studentId);
+      return {
+        assignment: { ...w, dueDate: new Date().toISOString(), type: AssignmentType.ESSAY, points: 10 } as Assignment,
+        submission: sub
+      };
     });
   }
 
   async getSubmissionsByAssignment(aid: string) {
     const students = this.db.users.filter(u => u.role === UserRole.STUDENT);
     return students.map(s => {
-       const sub = this.db.submissions.find(sub => sub.assignmentId === aid && sub.studentId === s.id);
-       return { student: s, submission: sub };
+      const sub = this.db.submissions.find(sub => sub.assignmentId === aid && sub.studentId === s.id);
+      return { student: s, submission: sub };
     });
   }
 
@@ -241,18 +249,18 @@ class MockProvider implements DataProvider {
       status: SubmissionStatus.SUBMITTED
     };
     const idx = this.db.submissions.findIndex(s => s.assignmentId === d.assignmentId && s.studentId === d.studentId);
-    if(idx>-1) { 
-        this.db.submissions[idx] = {...this.db.submissions[idx], ...sub, id: this.db.submissions[idx].id, status: SubmissionStatus.SUBMITTED}; 
-        this.save(); 
-        return this.db.submissions[idx]; 
+    if (idx > -1) {
+      this.db.submissions[idx] = { ...this.db.submissions[idx], ...sub, id: this.db.submissions[idx].id, status: SubmissionStatus.SUBMITTED };
+      this.save();
+      return this.db.submissions[idx];
     }
     else { this.db.submissions.push(sub); this.save(); return sub; }
   }
 
   async gradeSubmission(subId: string, grade: number, level: AssessmentLevel, feedback: string) {
     const idx = this.db.submissions.findIndex(s => s.id === subId);
-    if(idx === -1) throw new Error("Not found");
-    
+    if (idx === -1) throw new Error("Not found");
+
     let stars = 0;
     if (level === AssessmentLevel.T) stars = 3;
     else if (level === AssessmentLevel.H) stars = 1;
@@ -278,13 +286,13 @@ class MockProvider implements DataProvider {
 
   async updateLessonProgress(sid: string, lessonId: string, completed: boolean) {
     const resources = this.db.resources.filter(r => r.lessonId === lessonId);
-    if(resources.length > 0) {
-      const rid = resources[0].id; 
+    if (resources.length > 0) {
+      const rid = resources[0].id;
       const idx = this.db.progress.findIndex(p => p.studentId === sid && p.resourceId === rid);
-      if(idx>-1) {
-         this.db.progress[idx].completed = completed;
+      if (idx > -1) {
+        this.db.progress[idx].completed = completed;
       } else {
-         this.db.progress.push({ id: this.genId(), studentId: sid, resourceId: rid, lessonId, completed: completed, completedAt: new Date().toISOString() });
+        this.db.progress.push({ id: this.genId(), studentId: sid, resourceId: rid, lessonId, completed: completed, completedAt: new Date().toISOString() });
       }
       this.save();
     }
@@ -292,11 +300,11 @@ class MockProvider implements DataProvider {
   }
 
   async getAnnouncements(cid?: string, tgt?: string) { return this.db.announcements; }
-  async createAnnouncement(d:any) { const a = {...d, id: this.genId(), createdAt: new Date().toISOString()}; this.db.announcements.push(a); this.save(); return a; }
+  async createAnnouncement(d: any) { const a = { ...d, id: this.genId(), createdAt: new Date().toISOString() }; this.db.announcements.push(a); this.save(); return a; }
   async deleteAnnouncement(id: string) { this.db.announcements = this.db.announcements.filter(a => a.id !== id); this.save(); }
   async getReportStats(cid: string) { return { totalStudents: 30, avgGrade: 0, submissionRate: 80, lessonCompletionRate: 70 }; }
   async getAtRiskStudents(cid: string) { return []; }
-  async getGradebookData(cid: string) { return { students:[], assignments:[], submissions:[] }; }
+  async getGradebookData(cid: string) { return { students: [], assignments: [], submissions: [] }; }
 }
 
 export const mockProvider = new MockProvider();
