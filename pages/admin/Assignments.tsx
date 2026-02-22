@@ -11,7 +11,7 @@ const AdminAssignments = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]); // To map Lesson names if needed
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentAssignment, setCurrentAssignment] = useState<Partial<Assignment>>({});
-  
+
   // Helpers
   const formatDate = (isoString: string) => {
     if (!isoString) return '';
@@ -38,7 +38,7 @@ const AdminAssignments = () => {
       ...currentAssignment,
       type: currentAssignment.type || AssignmentType.ESSAY,
       points: currentAssignment.points || 10,
-      lessonId: currentAssignment.lessonId || '', // Optional
+      lessonId: currentAssignment.lessonId || 'l1', // Đảm bảo có lessonId
     };
 
     if (currentAssignment.id) {
@@ -46,9 +46,9 @@ const AdminAssignments = () => {
     } else {
       await dataProvider.createAssignment(payload as Assignment);
     }
-    
+
     setIsModalOpen(false);
-    loadData();
+    await loadData();
   };
 
   const handleDelete = async (id: string) => {
@@ -59,10 +59,10 @@ const AdminAssignments = () => {
   };
 
   const openModal = (assign?: Assignment) => {
-    setCurrentAssignment(assign || { 
-      title: '', 
-      description: '', 
-      type: AssignmentType.ESSAY, 
+    setCurrentAssignment(assign || {
+      title: '',
+      description: '',
+      type: AssignmentType.ESSAY,
       points: 10,
       dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       rubric: ''
@@ -74,7 +74,7 @@ const AdminAssignments = () => {
     <div className="p-6 space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Quản lý Bài tập</h1>
-        <button 
+        <button
           onClick={() => openModal()}
           className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
         >
@@ -107,7 +107,7 @@ const AdminAssignments = () => {
               </div>
 
               <div className="flex items-center gap-3 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
-                 <button 
+                <button
                   onClick={() => navigate(`/admin/assignments/${assign.id}/grade`)}
                   className="flex flex-col items-center justify-center p-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors min-w-[80px]"
                 >
@@ -115,14 +115,14 @@ const AdminAssignments = () => {
                   <span className="text-xs font-bold">Chấm bài</span>
                 </button>
                 <div className="flex flex-col gap-2">
-                  <button 
+                  <button
                     onClick={() => openModal(assign)}
                     className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg"
                     title="Sửa"
                   >
                     <Edit2 size={18} />
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleDelete(assign.id)}
                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
                     title="Xóa"
@@ -150,63 +150,71 @@ const AdminAssignments = () => {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Tiêu đề bài tập <span className="text-red-500">*</span></label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={currentAssignment.title || ''}
-              onChange={(e) => setCurrentAssignment({...currentAssignment, title: e.target.value})}
+              onChange={(e) => setCurrentAssignment({ ...currentAssignment, title: e.target.value })}
               placeholder="VD: Bài tập về nhà..."
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả / Đề bài</label>
-            <textarea 
+            <textarea
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
               value={currentAssignment.description || ''}
-              onChange={(e) => setCurrentAssignment({...currentAssignment, description: e.target.value})}
+              onChange={(e) => setCurrentAssignment({ ...currentAssignment, description: e.target.value })}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Loại bài tập</label>
-              <select 
+              <select
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 value={currentAssignment.type}
-                onChange={(e) => setCurrentAssignment({...currentAssignment, type: e.target.value as AssignmentType})}
+                onChange={(e) => setCurrentAssignment({ ...currentAssignment, type: e.target.value as AssignmentType })}
               >
                 <option value={AssignmentType.ESSAY}>Tự luận (Nhập text)</option>
                 <option value={AssignmentType.FILE}>Nộp File/Link</option>
               </select>
             </div>
             <div>
-               <label className="block text-sm font-medium text-gray-700 mb-1">Điểm tối đa</label>
-               <input 
-                type="number" 
+              <label className="block text-sm font-medium text-gray-700 mb-1">Điểm tối đa</label>
+              <input
+                type="number"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={currentAssignment.points || 10}
-                onChange={(e) => setCurrentAssignment({...currentAssignment, points: Number(e.target.value)})}
+                onChange={(e) => setCurrentAssignment({ ...currentAssignment, points: Number(e.target.value) })}
               />
             </div>
           </div>
 
           <div>
-             <label className="block text-sm font-medium text-gray-700 mb-1">Hạn nộp <span className="text-red-500">*</span></label>
-             <input 
-              type="date" 
+            <label className="block text-sm font-medium text-gray-700 mb-1">Hạn nộp <span className="text-red-500">*</span></label>
+            <input
+              type="date"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={formatDate(currentAssignment.dueDate || '')}
-              onChange={(e) => setCurrentAssignment({...currentAssignment, dueDate: new Date(e.target.value).toISOString()})}
+              onChange={(e) => {
+                try {
+                  if (e.target.value) {
+                    setCurrentAssignment({ ...currentAssignment, dueDate: new Date(e.target.value).toISOString() });
+                  }
+                } catch (error) {
+                  console.error("Invalid Date", error);
+                }
+              }}
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Tiêu chí chấm điểm (Rubric)</label>
-            <textarea 
+            <textarea
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-20"
               value={currentAssignment.rubric || ''}
-              onChange={(e) => setCurrentAssignment({...currentAssignment, rubric: e.target.value})}
+              onChange={(e) => setCurrentAssignment({ ...currentAssignment, rubric: e.target.value })}
               placeholder="VD: Đúng chính tả (2đ), Đủ ý (8đ)..."
             />
           </div>
