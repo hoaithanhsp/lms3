@@ -22,6 +22,7 @@ const ResourceBank = () => {
   // State
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [resources, setResources] = useState<Resource[]>([]);
   const [classes, setClasses] = useState<Class[]>([]);
 
@@ -161,21 +162,58 @@ const ResourceBank = () => {
       </div>
 
       {/* 3. Category Folders */}
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-lg font-bold text-gray-900">Danh mục Thư mục</h2>
+        {selectedCategory && (
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+          >
+            Xóa bộ lọc thư mục <x size={14} />
+          </button>
+        )}
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {folders.map((folder, idx) => (
-          <div key={idx} className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer flex flex-col items-center text-center gap-3 group">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${folder.color} group-hover:scale-110 transition-transform`}>
-              <folder.icon size={24} />
+        {folders.map((folder, idx) => {
+          const isActive = selectedCategory === folder.name;
+          return (
+            <div
+              key={idx}
+              onClick={() => setSelectedCategory(isActive ? null : folder.name)}
+              className={`p-4 rounded-xl shadow-sm border transition-all cursor-pointer flex flex-col items-center text-center gap-3 group ${isActive
+                  ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-500/20'
+                  : 'bg-white border-gray-200 hover:shadow-md'
+                }`}
+            >
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${folder.color} group-hover:scale-110 transition-transform`}>
+                <folder.icon size={24} />
+              </div>
+              <span className={`text-sm font-bold leading-tight ${isActive ? 'text-blue-700' : 'text-gray-700'}`}>
+                {folder.name}
+              </span>
             </div>
-            <span className="text-sm font-bold text-gray-700 leading-tight">{folder.name}</span>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* 4. Resource Grid View */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {resources
           .filter(r => r.name?.toLowerCase().includes(searchQuery.toLowerCase()))
+          .filter(r => {
+            if (!selectedCategory) return true;
+            // Map folder names to resource categories roughly for the mock data
+            const folderMap: Record<string, string[]> = {
+              'Giáo án & Kế hoạch': ['Giáo án'],
+              'Đề thi chất lượng cao': ['Đề thi', 'Bài tập'],
+              'Sáng kiến kinh nghiệm': ['Sáng kiến', 'Tham khảo'],
+              'Hình ảnh minh họa 3D': ['Hình ảnh'],
+              'Biểu đồ & Infographic': ['Biểu đồ'],
+              'Video bài giảng': ['Video']
+            };
+            const validCategories = folderMap[selectedCategory] || [];
+            return validCategories.includes(r.category);
+          })
           .map(resource => (
             <div key={resource.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all group relative">
               {/* Thumbnail Area */}
