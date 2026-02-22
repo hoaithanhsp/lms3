@@ -224,8 +224,15 @@ class MockProvider implements DataProvider {
     const worksheets = this.db.resources.filter(r => r.type === ResourceType.WORKSHEET);
     return worksheets.map(w => {
       const sub = this.db.submissions.find(s => s.assignmentId === w.id && s.studentId === studentId);
+      const anyW = w as any;
       return {
-        assignment: { ...w, dueDate: new Date().toISOString(), type: AssignmentType.ESSAY, points: 10 } as Assignment,
+        assignment: {
+          ...w,
+          description: anyW.description || 'Chưa có mô tả',
+          dueDate: anyW.dueDate || new Date(Date.now() + 86400000).toISOString(),
+          type: anyW.type || AssignmentType.ESSAY,
+          points: anyW.points || 10
+        } as Assignment,
         submission: sub
       };
     });
