@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Users, BookOpen, FileCheck, AlertCircle } from 'lucide-react';
 import dataProvider from '../../services/provider';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({ classCount: 0, studentCount: 0, assignmentCount: 0 });
 
   useEffect(() => {
@@ -20,36 +22,39 @@ const AdminDashboard = () => {
           <h1 className="text-2xl font-bold text-gray-900">Tổng quan lớp học</h1>
           <p className="text-gray-500">Chào mừng cô giáo quay trở lại!</p>
         </div>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium transition-colors">
+        <button
+          onClick={() => navigate('/admin/assignments')}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium transition-colors"
+        >
           + Tạo bài tập mới
         </button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatsCard 
-          icon={<Users className="text-blue-600" />} 
-          title="Tổng số Học sinh" 
-          value={stats.studentCount.toString()} 
-          color="bg-blue-50" 
+        <StatsCard
+          icon={<Users className="text-blue-600" />}
+          title="Tổng số Học sinh"
+          value={stats.studentCount.toString()}
+          color="bg-blue-50"
         />
-        <StatsCard 
-          icon={<BookOpen className="text-green-600" />} 
-          title="Tổng số Lớp học" 
-          value={stats.classCount.toString()} 
-          color="bg-green-50" 
+        <StatsCard
+          icon={<BookOpen className="text-green-600" />}
+          title="Tổng số Lớp học"
+          value={stats.classCount.toString()}
+          color="bg-green-50"
         />
-        <StatsCard 
-          icon={<FileCheck className="text-purple-600" />} 
-          title="Bài tập sắp nộp" 
-          value={stats.assignmentCount.toString()} 
-          color="bg-purple-50" 
+        <StatsCard
+          icon={<FileCheck className="text-purple-600" />}
+          title="Bài tập sắp nộp"
+          value={stats.assignmentCount.toString()}
+          color="bg-purple-50"
         />
-        <StatsCard 
-          icon={<AlertCircle className="text-orange-600" />} 
-          title="Cần đánh giá" 
-          value="2" 
-          color="bg-orange-50" 
+        <StatsCard
+          icon={<AlertCircle className="text-orange-600" />}
+          title="Cần đánh giá"
+          value="2"
+          color="bg-orange-50"
         />
       </div>
 
